@@ -1,0 +1,88 @@
+
+# Guidelines for Model Prediction and Evaluation
+
+This folder contains all the necessary files required for training, prediction, and evaluation of the model. Below is a breakdown of the contents and instructions on how to use the `module.py` for predicting and evaluating on your test data.
+
+---
+
+### Folder Contents:
+
+1. **conda.env**
+   - A Conda environment file that includes all dependencies required to run the code.
+   
+2. **requirements.txt**
+   - A list of dependencies for setting up the Python environment using `pip`.
+
+3. **module.py**
+   - Python module with the following key functions:
+     - **train_model()**: A function to train and save the model.
+     - **optimize_model_grid_search()**: A function that tunes hyperparameters and saves the optimized model.
+     - **predict_model()**: A function that loads the model and makes predictions on unseen data.
+     - **evaluate_model()**: A function that evaluates the model performance on unseen test data (both next change prediction and direction of change).
+
+4. **research.ipynb**
+   - A full exploratory data analysis (EDA) and report of the analysis performed on the dataset. This notebook contains data cleaning, visualization, statistical insights, and feature selection details.
+
+---
+
+### Steps to Set Up the Environment:
+
+#### Option 1: Using Conda Environment (`conda.env`)
+1. Install Conda (if not already installed).
+2. Create a new environment using the provided `conda.env` file:
+    conda env create -f conda.env
+3. Activate the environment:
+conda activate model_environment
+
+
+#### Option 2: Using `requirements.txt` with `pip`
+1. Ensure Python 3.8 is installed on your system.
+2. Install the required packages using `pip`:
+    pip install -r requirements.txt
+    
+    
+    
+### Steps to Predict & Evaluate:
+
+Step 1 : Predict on Your Test Data
+Use the optimized model to make predictions on your test data:
+Load your test data: Ensure that your test data is in CSV format and has the same structure (columns) as the training data.
+Make Predictions: Run the following command to predict the next change and direction of change:
+
+from module import predict_model
+import pandas as pd
+
+test_data = pd.read_csv('path_to_your_test_data.csv')  # Update with actual path
+predictions = predict_model(test_data, model_path='optimized_xgb_model.pkl', scaler_path='scaler.pkl')
+
+print(predictions.head())
+This will output a DataFrame with the predicted next change and direction of change.
+
+
+
+
+
+Step 2: Evaluate the Model
+    
+To evaluate how well the model performs on your test data:
+Evaluate the Model: Use the following function to check the Mean Absolute Error (MAE), Root Mean Squared Error (RMSE), and Accuracy of the direction prediction:
+
+from module import evaluate_model
+import pandas as pd
+
+test_data = pd.read_csv('path_to_your_test_data.csv')  # Update with actual path
+evaluate_model(test_data, model_path='optimized_xgb_model.pkl', scaler_path='scaler.pkl')
+
+This will print the evaluation metrics, including MAE, RMSE, and accuracy for the direction of change.
+
+
+
+
+
+
+Note:
+File Paths: Ensure that the paths provided in the function calls (e.g., data_path, model_path, scaler_path) are correctly pointing to the actual file locations on your system.
+Model Files: The model files (optimized_xgb_model.pkl) and the scaler (scaler.pkl) should be stored in the same directory from where you are running the code.
+Test Data Structure: The test data should have the same structure as the training data, including columns like macd_60_120, macd_60_480, macd_60_960, rsi_60, volume_1h_8, and timestamp.
+
+    
